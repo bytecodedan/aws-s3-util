@@ -8,6 +8,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
+	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 )
@@ -15,7 +16,8 @@ import (
 func Upload(awsKey, awsSecret, key, fileDir, bucket, region string) {
 	// Load the AWS configuration
 	// cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
-	cfg, err := config.WithCredentialsProvider(context.TODO(), config.WithRegion(region))
+	creds := credentials.NewStaticCredentialsProvider(awsKey, awsSecret, "")
+	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithCredentialsProvider(creds), config.WithRegion(region))
 	if err != nil {
 		log.Fatalf("Unable to load SDK config, %v", err)
 	}
