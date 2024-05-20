@@ -12,20 +12,22 @@ import (
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
 )
 
-func Upload(key, fileDir, bucket, region string) {
+func Upload(awsKey, awsSecret, key, fileDir, bucket, region string) {
 	// Load the AWS configuration
-	cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
+	// cfg, err := config.LoadDefaultConfig(context.TODO(), config.WithRegion(region))
+	cfg, err := config.WithCredentialsProvider(context.TODO(), config.WithRegion(region))
 	if err != nil {
-		log.Fatalf("unable to load SDK config, %v", err)
+		log.Fatalf("Unable to load SDK config, %v", err)
 	}
 
 	// Create an S3 service client
 	svc := s3.NewFromConfig(cfg)
 
+	log.Print(fileDir)
 	// Open the file for use
 	file, err := os.Open(fileDir)
 	if err != nil {
-		log.Fatalf("failed to open file %q, %v", fileDir, err)
+		log.Fatalf("Failed to open file %q, %v", fileDir, err)
 	}
 	defer file.Close()
 
